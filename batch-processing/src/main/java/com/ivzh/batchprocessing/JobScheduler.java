@@ -24,8 +24,7 @@ public class JobScheduler {
     @Scheduled(fixedRate = 5_000)
     public void launchJob() throws Exception {
         if (enableRun) {
-            JobExecution jobExecution = jobLauncher
-                    .run(job, new JobParametersBuilder().addDate("runDate", new Date()).toJobParameters());
+            jobLauncher.run(job, new JobParametersBuilder().addDate("runDate", new Date()).toJobParameters());
         } else {
             this.enableRun = true;
         }

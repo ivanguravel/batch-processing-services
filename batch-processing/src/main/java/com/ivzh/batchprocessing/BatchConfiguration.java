@@ -1,6 +1,7 @@
 package com.ivzh.batchprocessing;
 
 import com.ivzh.batchprocessing.dtos.User;
+import com.ivzh.batchprocessing.processors.BlackListFilteringProcessor;
 import com.ivzh.batchprocessing.processors.PersonItemProcessor;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -10,21 +11,21 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.amqp.AmqpItemReader;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.amqp.AmqpItemReader;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
+import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 
 @Configuration
 @EnableBatchProcessing
@@ -57,15 +58,17 @@ public class BatchConfiguration {
 	}
 
     @Bean
-    public ItemProcessor<byte[], ? extends User> processor() {
-        return new PersonItemProcessor();
+    public CompositeItemProcessor<byte[], ? extends User> processor() {
+        final CompositeItemProcessor<byte[], User> processor = new CompositeItemProcessor<>();
+        processor.setDelegates(Arrays.asList(new PersonItemProcessor(), new BlackListFilteringProcessor()));
+        return processor;
     }
 
     @Bean
     public JdbcBatchItemWriter<User> writer(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<User>()
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-                .sql("INSERT INTO people (first_name, last_name) VALUES (:firstName, :lastName)")
+                .sql("INSERT INTO user (first_name, last_name) VALUES (:firstName, :lastName)")
                 .dataSource(dataSource)
                 .build();
     }
