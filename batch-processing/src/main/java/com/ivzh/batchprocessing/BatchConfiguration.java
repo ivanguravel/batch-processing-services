@@ -53,13 +53,13 @@ public class BatchConfiguration {
 
 
 	@Bean
-	public ItemReader<byte[]> reader() {
+	public ItemReader<String> reader() {
 		return new AmqpItemReader<>(this.template());
 	}
 
     @Bean
-    public CompositeItemProcessor<byte[], ? extends User> processor() {
-        final CompositeItemProcessor<byte[], User> processor = new CompositeItemProcessor<>();
+    public CompositeItemProcessor<String, ? extends User> processor() {
+        final CompositeItemProcessor<String, User> processor = new CompositeItemProcessor<>();
         processor.setDelegates(Arrays.asList(new PersonItemProcessor(), new BlackListFilteringProcessor()));
         return processor;
     }
@@ -87,7 +87,7 @@ public class BatchConfiguration {
     @Bean
     public Step step1(JdbcBatchItemWriter<User> writer) {
         return stepBuilderFactory.get(STEP_NAME)
-                .<byte[], User>chunk(1)
+                .<String, User>chunk(1)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer)
