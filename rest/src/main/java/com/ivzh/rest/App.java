@@ -1,7 +1,6 @@
 package com.ivzh.rest;
 
 import com.ivzh.rest.dao.UserDAO;
-import com.ivzh.rest.representations.User;
 import com.ivzh.rest.resources.ClientResources;
 import com.sun.jersey.api.client.Client;
 import io.dropwizard.Application;
@@ -29,11 +28,6 @@ public class App extends Application<AppConfiguration> {
 
     @Override
     public void run(AppConfiguration c, Environment e) throws Exception {
-
-        logger.info("Method App#run() called");
-        for (int i = 0; i < c.getMessageRepetitions(); i++) {
-            System.out.println(c.getMessage());
-        }
         final DBIFactory factory = new DBIFactory();
         final DBI jdbi = factory.build(e, c.getDataSourceFactory(), "db");
         final Client client = new JerseyClientBuilder(e).build("REST Client");

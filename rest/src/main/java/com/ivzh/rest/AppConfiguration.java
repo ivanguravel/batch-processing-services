@@ -18,9 +18,6 @@ public class AppConfiguration extends io.dropwizard.Configuration {
 	@JsonProperty
 	@Max(10)
 	private int messageRepetitions;
-	
-	@JsonProperty
-	private String additionalMessage = "This is optional";
 
 	@Valid
 	@NotNull
@@ -40,7 +37,7 @@ public class AppConfiguration extends io.dropwizard.Configuration {
 	}
 	
 	public String getAdditionalMessage() {
-		return additionalMessage;
+		return "optional";
 	}
 	
 	public String getMessage() {

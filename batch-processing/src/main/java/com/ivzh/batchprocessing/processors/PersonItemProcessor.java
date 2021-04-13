@@ -6,13 +6,13 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.batch.item.ItemProcessor;
 
-public class PersonItemProcessor implements ItemProcessor<byte[], User> {
+public class PersonItemProcessor implements ItemProcessor<String, User> {
 
 	private static final Logger log = LoggerFactory.getLogger(PersonItemProcessor.class);
 
 	@Override
-	public User process(final byte[] person) throws Exception {
-		String[] split = new String(person).split(",");
+	public User process(final String person) throws Exception {
+		String[] split = person.split(",");
 		User result = new User(split[0], split[1]);
 		log.info(String.format("Converted user: %s", result));
 		return result;

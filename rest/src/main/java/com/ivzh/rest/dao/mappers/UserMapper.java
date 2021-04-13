@@ -1,13 +1,13 @@
 package com.ivzh.rest.dao.mappers;
 
 
-import com.ivzh.rest.representations.User;
+import com.ivzh.rest.dtos.User;
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;
 
 import java.sql.*;
 
-public class ContactMapper implements ResultSetMapper<User> {
+public class UserMapper implements ResultSetMapper<User> {
 
     public User map(int index, ResultSet r, StatementContext ctx) throws SQLException {
 

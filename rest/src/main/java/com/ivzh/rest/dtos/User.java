@@ -1,8 +1,4 @@
-package com.ivzh.rest.representations;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.dropwizard.validation.ValidationMethod;
-import org.hibernate.validator.constraints.*;
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.ivzh.rest.dtos;
 
 import java.util.Objects;
 
