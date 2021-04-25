@@ -2,11 +2,7 @@ package com.ivzh.rest.dtos;
 
 import java.util.Objects;
 
-/**
- * Class for representation of contacts. It includes id, firstName,
- * lastName, phone, mail, comment.
- * Using JsonValidation
- */
+
 public class User {
 
     private String lastName;
