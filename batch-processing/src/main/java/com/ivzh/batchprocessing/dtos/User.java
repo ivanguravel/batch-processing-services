@@ -1,16 +1,16 @@
 package com.ivzh.batchprocessing.dtos;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class User {
 
-	private String lastName;
-	private String firstName;
-
-	public User() {
-	}
+	private final int id;
+	private final String lastName;
+	private final String firstName;
 
 	public User(String firstName, String lastName) {
+		this.id = new Random().nextInt();
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
@@ -21,6 +21,10 @@ public class User {
 
 	public String getLastName() {
 		return lastName;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	@Override

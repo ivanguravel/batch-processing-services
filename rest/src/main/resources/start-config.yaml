@@ -2,7 +2,7 @@ defaultSize: 5
 server:
   applicationConnectors:
     - type: http
-      port: 8080
+      port: 8082
 database:
   driverClass: com.mysql.jdbc.Driver
   url: jdbc:mysql://127.0.0.1:3306/TESTS

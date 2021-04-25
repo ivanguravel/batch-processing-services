@@ -11,7 +11,9 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.amqp.AmqpItemReader;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
@@ -26,6 +28,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableBatchProcessing
@@ -87,7 +90,7 @@ public class BatchConfiguration {
     @Bean
     public Step step1(JdbcBatchItemWriter<User> writer) {
         return stepBuilderFactory.get(STEP_NAME)
-                .<String, User>chunk(1)
+                .<String, User>chunk(3)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer)
@@ -97,6 +100,7 @@ public class BatchConfiguration {
     @Bean
     public RabbitTemplate template() {
         RabbitTemplate template = new RabbitTemplate(this.rabbitConnectionFactory);
+
         template.setDefaultReceiveQueue(queueName);
         return template;
     }
