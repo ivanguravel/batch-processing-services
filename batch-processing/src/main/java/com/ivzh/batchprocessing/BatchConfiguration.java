@@ -10,7 +10,11 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
@@ -19,11 +23,16 @@ import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourc
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.support.CompositeItemProcessor;
+import org.springframework.batch.support.DatabaseType;
+import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
@@ -53,6 +62,47 @@ public class BatchConfiguration {
     private JobCompletionNotificationListener listener;
     @Autowired
     private Step step1;
+
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/TESTS?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false");
+        dataSource.setUsername("root");
+        dataSource.setPassword("Qwerty12345%$#@!");
+//        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
+//        databasePopulator.addScript(new ClassPathResource("org/springframework/batch/core/schema-drop-mysql.sql"));
+//        databasePopulator.addScript(new ClassPathResource("org/springframework/batch/core/schema-mysql.sql"));
+        //DatabasePopulatorUtils.execute(databasePopulator, dataSource);
+        return dataSource;
+    }
+
+    @Bean
+    public ResourcelessTransactionManager txManager() {
+        return new ResourcelessTransactionManager();
+    }
+
+    @Bean
+    public BeanPropertyItemSqlParameterSourceProvider<User> beanPropertyItemSqlParameterSourceProvider() {
+        return new BeanPropertyItemSqlParameterSourceProvider<>();
+    }
+
+    @Bean
+    public JobRepository mysqlJobRepository(DataSource dataSource, ResourcelessTransactionManager transactionManager)
+            throws Exception {
+        JobRepositoryFactoryBean factory = new JobRepositoryFactoryBean();
+        factory.setDatabaseType(DatabaseType.MYSQL.getProductName());
+        factory.setDataSource(dataSource);
+        factory.setTransactionManager(transactionManager);
+        return factory.getObject();
+    }
+    @Bean
+    public JobLauncher mysqljobLauncher(JobRepository jobRepository) {
+        SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+        jobLauncher.setJobRepository(jobRepository);
+        return jobLauncher;
+    }
 
 
 	@Bean
@@ -88,8 +138,9 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Step step1(JdbcBatchItemWriter<User> writer) {
+    public Step step1(JdbcBatchItemWriter<User> writer, StepBuilderFactory stepBuilderFactory, ResourcelessTransactionManager transactionManager) {
         return stepBuilderFactory.get(STEP_NAME)
+                 .transactionManager(transactionManager)
                 .<String, User>chunk(3)
                 .reader(reader())
                 .processor(processor())
