@@ -32,6 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -64,17 +65,17 @@ public class BatchConfiguration {
     private Step step1;
 
 
-    @Bean
+    @Bean("mysqlDataSource")
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/TESTS?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false");
         dataSource.setUsername("root");
         dataSource.setPassword("Qwerty12345%$#@!");
-//        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-//        databasePopulator.addScript(new ClassPathResource("org/springframework/batch/core/schema-drop-mysql.sql"));
-//        databasePopulator.addScript(new ClassPathResource("org/springframework/batch/core/schema-mysql.sql"));
-        //DatabasePopulatorUtils.execute(databasePopulator, dataSource);
+        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
+        databasePopulator.addScript(new ClassPathResource("org/springframework/batch/core/schema-drop-mysql.sql"));
+        databasePopulator.addScript(new ClassPathResource("org/springframework/batch/core/schema-mysql.sql"));
+        DatabasePopulatorUtils.execute(databasePopulator, dataSource);
         return dataSource;
     }
 
@@ -83,7 +84,7 @@ public class BatchConfiguration {
         return new ResourcelessTransactionManager();
     }
 
-    @Bean
+    @Bean("sqlParameter")
     public BeanPropertyItemSqlParameterSourceProvider<User> beanPropertyItemSqlParameterSourceProvider() {
         return new BeanPropertyItemSqlParameterSourceProvider<>();
     }
@@ -107,7 +108,7 @@ public class BatchConfiguration {
 
 	@Bean
 	public ItemReader<String> reader() {
-		return new AmqpItemReader<>(this.template());
+		return new AmqpItemReader<>(template());
 	}
 
     @Bean
@@ -118,11 +119,11 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JdbcBatchItemWriter<User> writer(DataSource dataSource) {
+    public JdbcBatchItemWriter<User> writer() {
         return new JdbcBatchItemWriterBuilder<User>()
-                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-                .sql("INSERT INTO user (first_name, last_name) VALUES (:firstName, :lastName)")
-                .dataSource(dataSource)
+                .itemSqlParameterSourceProvider(beanPropertyItemSqlParameterSourceProvider())
+                .sql("INSERT INTO users (person_id, first_name, last_name) VALUES (:id, :firstName, :lastName)")
+                .dataSource(dataSource())
                 .build();
     }
 
