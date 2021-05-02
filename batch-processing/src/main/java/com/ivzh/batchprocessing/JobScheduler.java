@@ -14,7 +14,7 @@ import java.util.Date;
 @Component
 public class JobScheduler {
 
-    private boolean enableRun = false;
+    private boolean enableRun;
 
     @Autowired
     private Job job;

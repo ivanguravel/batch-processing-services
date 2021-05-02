@@ -1,8 +1,11 @@
-package com.ivzh.batchprocessing;
+package com.ivzh.batchprocessing.configs;
 
+import com.ivzh.batchprocessing.JobCompletionNotificationListener;
 import com.ivzh.batchprocessing.dtos.User;
 import com.ivzh.batchprocessing.processors.BlackListFilteringProcessor;
 import com.ivzh.batchprocessing.processors.PersonItemProcessor;
+import com.ivzh.batchprocessing.readers.RabbitmqBatchReader;
+import com.ivzh.batchprocessing.utils.Consts;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.batch.core.Job;
@@ -26,6 +29,7 @@ import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.batch.support.DatabaseType;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,11 +42,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
-import java.util.List;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 @Configuration
 @EnableBatchProcessing
-@PropertySource("classpath:application.properties")
 @EnableScheduling
 public class BatchConfiguration {
 
@@ -50,15 +53,15 @@ public class BatchConfiguration {
     private static final String STEP_NAME = "step1";
 
 
-    @Value("${queue.name}")
-    private String queueName;
+
 
     @Autowired
-    public JobBuilderFactory jobBuilderFactory;
+    private JobBuilderFactory jobBuilderFactory;
     @Autowired
-    public StepBuilderFactory stepBuilderFactory;
+    private StepBuilderFactory stepBuilderFactory;
     @Autowired
-    private ConnectionFactory rabbitConnectionFactory;
+    @Qualifier(Consts.READER_NAME)
+    private ItemReader<String> reader;
     @Autowired
     private JobCompletionNotificationListener listener;
     @Autowired
@@ -105,12 +108,6 @@ public class BatchConfiguration {
         return jobLauncher;
     }
 
-
-	@Bean
-	public ItemReader<String> reader() {
-		return new AmqpItemReader<>(template());
-	}
-
     @Bean
     public CompositeItemProcessor<String, ? extends User> processor() {
         final CompositeItemProcessor<String, User> processor = new CompositeItemProcessor<>();
@@ -143,17 +140,11 @@ public class BatchConfiguration {
         return stepBuilderFactory.get(STEP_NAME)
                  .transactionManager(transactionManager)
                 .<String, User>chunk(3)
-                .reader(reader())
+                .reader(reader)
                 .processor(processor())
                 .writer(writer)
                 .build();
     }
 
-    @Bean
-    public RabbitTemplate template() {
-        RabbitTemplate template = new RabbitTemplate(this.rabbitConnectionFactory);
 
-        template.setDefaultReceiveQueue(queueName);
-        return template;
-    }
 }
