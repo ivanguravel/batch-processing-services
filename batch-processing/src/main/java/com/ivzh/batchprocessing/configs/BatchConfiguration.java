@@ -42,7 +42,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentSkipListMap;
 
 @Configuration
 @EnableBatchProcessing
@@ -63,34 +62,18 @@ public class BatchConfiguration {
     @Qualifier(Consts.READER_NAME)
     private ItemReader<String> reader;
     @Autowired
+    @Qualifier(Consts.MYSQL_DATA_SOURCE)
+    private DataSource dataSource;
+    @Autowired
+    @Qualifier(Consts.SQL_PARAMETER_PROVIDER)
+    private BeanPropertyItemSqlParameterSourceProvider<User> beanPropertyItemSqlParameterSourceProvider;
+    @Autowired
     private JobCompletionNotificationListener listener;
     @Autowired
     private Step step1;
 
 
-    @Bean("mysqlDataSource")
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/TESTS?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false");
-        dataSource.setUsername("root");
-        dataSource.setPassword("Qwerty12345%$#@!");
-        ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
-        databasePopulator.addScript(new ClassPathResource("org/springframework/batch/core/schema-drop-mysql.sql"));
-        databasePopulator.addScript(new ClassPathResource("org/springframework/batch/core/schema-mysql.sql"));
-        DatabasePopulatorUtils.execute(databasePopulator, dataSource);
-        return dataSource;
-    }
 
-    @Bean
-    public ResourcelessTransactionManager txManager() {
-        return new ResourcelessTransactionManager();
-    }
-
-    @Bean("sqlParameter")
-    public BeanPropertyItemSqlParameterSourceProvider<User> beanPropertyItemSqlParameterSourceProvider() {
-        return new BeanPropertyItemSqlParameterSourceProvider<>();
-    }
 
     @Bean
     public JobRepository mysqlJobRepository(DataSource dataSource, ResourcelessTransactionManager transactionManager)
@@ -118,9 +101,9 @@ public class BatchConfiguration {
     @Bean
     public JdbcBatchItemWriter<User> writer() {
         return new JdbcBatchItemWriterBuilder<User>()
-                .itemSqlParameterSourceProvider(beanPropertyItemSqlParameterSourceProvider())
+                .itemSqlParameterSourceProvider(beanPropertyItemSqlParameterSourceProvider)
                 .sql("INSERT INTO users (person_id, first_name, last_name) VALUES (:id, :firstName, :lastName)")
-                .dataSource(dataSource())
+                .dataSource(dataSource)
                 .build();
     }
 

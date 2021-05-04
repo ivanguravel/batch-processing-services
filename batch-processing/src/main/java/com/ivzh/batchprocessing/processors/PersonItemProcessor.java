@@ -1,7 +1,6 @@
 package com.ivzh.batchprocessing.processors;
 
 import com.ivzh.batchprocessing.dtos.User;
-import com.ivzh.batchprocessing.exceptions.JobSkippedException;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,6 @@
 package com.ivzh.batchprocessing.processors;
 
 import com.ivzh.batchprocessing.dtos.User;
-import com.ivzh.batchprocessing.exceptions.JobSkippedException;
 import org.springframework.batch.item.ItemProcessor;
 
 import java.util.HashSet;
@@ -19,7 +18,7 @@ public class BlackListFilteringProcessor implements ItemProcessor<User, User> {
     @Override
     public User process(User user) throws Exception {
         if (blackListUsers.contains(user)) {
-            throw new JobSkippedException();
+            throw new IllegalArgumentException(String.format("can't process %s user", user));
         } else {
             return user;
         }
