@@ -19,11 +19,13 @@ public class DataConfiguration {
 
     @Bean(Consts.MYSQL_DATA_SOURCE)
     public DataSource dataSource() {
+        String user = System.getenv("DB_USER");
+        String password = System.getenv("DB_PASSWORD");
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/TESTS?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false");
-        dataSource.setUsername("root");
-        dataSource.setPassword("Qwerty12345%$#@!");
+        dataSource.setUsername(user);
+        dataSource.setPassword(password);
         ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
         databasePopulator.addScript(new ClassPathResource("org/springframework/batch/core/schema-drop-mysql.sql"));
         databasePopulator.addScript(new ClassPathResource("org/springframework/batch/core/schema-mysql.sql"));

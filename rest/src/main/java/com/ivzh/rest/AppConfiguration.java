@@ -29,8 +29,8 @@ public class AppConfiguration extends io.dropwizard.Configuration {
 		this.database.setMaxSize(this.defaultSize);
 		this.database.setMinSize(this.defaultSize);
 		this.database.setInitialSize(this.defaultSize);
-//		this.database.setUser(System.getenv("DB_USER"));
-//		this.database.setPassword(System.getenv("DB_PASSWORD"));
+		this.database.setUser(System.getenv("DB_USER"));
+		this.database.setPassword(System.getenv("DB_PASSWORD"));
 	}
 
 	@JsonProperty("database")

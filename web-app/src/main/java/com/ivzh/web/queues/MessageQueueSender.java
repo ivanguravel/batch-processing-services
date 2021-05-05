@@ -14,6 +14,11 @@ public class MessageQueueSender {
     private String queueName;
 
     public void queueDelivery(Object o) {
+        template.convertAndSend(this. queueName, o.toString());
+    }
+
+
+    public void queueDelivery(String queueName, Object o) {
         template.convertAndSend(queueName, o.toString());
     }
 }

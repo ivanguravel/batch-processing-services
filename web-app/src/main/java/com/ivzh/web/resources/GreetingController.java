@@ -22,7 +22,7 @@ public class GreetingController {
 	}
 
 	@PostMapping("/")
-	public String create(@ModelAttribute User user, Model model) {
+	public String create(@ModelAttribute User user, Model model, @RequestHeader("User-Agent") String userAgent) {
 		messageQueueSender.queueDelivery(user);
 		model.addAttribute("user", new User());
 		return "test";
