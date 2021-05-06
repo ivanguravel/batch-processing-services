@@ -49,7 +49,7 @@ public class HeaderCalculationHelper {
 
 
         scheduledExecutorService = Executors.newScheduledThreadPool(1);
-        scheduledExecutorService.schedule(new CalculatedHeadersDeliveryHelper(), 5, TimeUnit.SECONDS);
+        scheduledExecutorService.schedule(new CalculatedHeadersDeliveryHelper(), 2, TimeUnit.SECONDS);
     }
 
     private class HeaderCountCalculator extends Thread {
