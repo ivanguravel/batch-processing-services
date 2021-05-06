@@ -41,7 +41,7 @@ public class HeaderCalculationHelperTest {
         boolean result = false;
         Map<String, Long> map = queue.poll();
 
-        if (map != null && map.getOrDefault(CHROME_HEADER, 0L) > 0) {
+        if (map != null && map.getOrDefault(CHROME_HEADER, 0L) >= 3L) {
             result = true;
         }
 
