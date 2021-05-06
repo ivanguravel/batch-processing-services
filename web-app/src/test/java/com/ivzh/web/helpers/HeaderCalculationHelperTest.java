@@ -13,6 +13,9 @@ import java.util.Queue;
 
 public class HeaderCalculationHelperTest {
 
+
+    private static final String CHROME_HEADER = "Chrome";
+
     private HeaderCalculationHelper headerCalculationHelper = new HeaderCalculationHelper();
     private MessageDeliveryQueueSenderStub deliveryQueueSenderStub = new MessageDeliveryQueueSenderStub();
 
@@ -23,21 +26,22 @@ public class HeaderCalculationHelperTest {
         initStub();
 
         for (int i = 0; i < 4; i++) {
-            headerCalculationHelper.addHeader4Delivery("Chrome");
+            headerCalculationHelper.addHeader4Delivery(CHROME_HEADER);
         }
 
         Queue<Map<String, Long>> queue = deliveryQueueSenderStub.getQueue();
-        long endTestTime = System.currentTimeMillis() + 300_000;
-        Long currentTime = System.currentTimeMillis();
+        long endTestTime = System.currentTimeMillis() + 300000;
+        long currentTime = System.currentTimeMillis();
 
         while (queue.isEmpty() && currentTime <= endTestTime) {
+            Thread.sleep(2_000);
             currentTime = System.currentTimeMillis();
         }
 
         boolean result = false;
         Map<String, Long> map = queue.poll();
 
-        if (map != null && map.getOrDefault("Chrome", 0L) == 4) {
+        if (map != null && map.getOrDefault(CHROME_HEADER, 0L) > 0) {
             result = true;
         }
 

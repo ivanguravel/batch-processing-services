@@ -19,9 +19,6 @@ import java.util.concurrent.*;
 @Component
 public class HeaderCalculationHelper {
 
-
-
-
     private Queue<String> headersDeliveryQueue;
     private Map<String, Long> calculatedResults;
     private HeaderCountCalculator headersCountCalculator;
@@ -30,15 +27,25 @@ public class HeaderCalculationHelper {
     @Value("${headers.queue.name}")
     private String queueName;
 
-
     @Autowired
     private MessageQueueSender messageQueueSender;
 
-
+    /**
+     * Send data to the related message queue for future calculating headers count
+     *
+     * @param header which needs to be stored for future calculation
+     *
+     */
     public void addHeader4Delivery(final String header) {
         headersDeliveryQueue.add(header);
     }
 
+    /**
+     * Needed for pre-initialization of this class state.
+     * Called from Spring framework internals.
+     *
+     * @see @javax.annotation.PostConstruct
+     */
     @PostConstruct
     void init() {
         headersDeliveryQueue = new ConcurrentLinkedDeque<>();
@@ -52,6 +59,10 @@ public class HeaderCalculationHelper {
         scheduledExecutorService.schedule(new CalculatedHeadersDeliveryHelper(), 2, TimeUnit.SECONDS);
     }
 
+    /**
+     * This helper used for calculation headers over the requests.
+     * User can stop calculation with help included Semaphore
+     */
     private class HeaderCountCalculator extends Thread {
 
         private Semaphore semaphore = new Semaphore(1);
@@ -80,12 +91,16 @@ public class HeaderCalculationHelper {
         }
     }
 
+    /**
+     * This helper used stopping calculation of headers and send current result to the message queue.
+     */
     private class CalculatedHeadersDeliveryHelper extends Thread {
         @Override
         public void run() {
             try {
                 headersCountCalculator.stopCalculating();
                 messageQueueSender.queueDelivery(queueName, new HashMap<>(calculatedResults));
+                calculatedResults.clear();
             } finally {
                 headersCountCalculator.continueCalculating();
             }
