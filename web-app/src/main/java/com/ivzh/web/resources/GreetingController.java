@@ -1,6 +1,7 @@
 package com.ivzh.web.resources;
 
 import com.ivzh.web.dtos.User;
+import com.ivzh.web.helpers.HeaderCalculationHelper;
 import com.ivzh.web.queues.MessageQueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,8 @@ public class GreetingController {
 
 	@Autowired
 	MessageQueueSender messageQueueSender;
+	@Autowired
+	HeaderCalculationHelper headerCalculationHelper;
 
 
 	@GetMapping("/")
@@ -22,8 +25,9 @@ public class GreetingController {
 	}
 
 	@PostMapping("/")
-	public String create(@ModelAttribute User user, Model model, @RequestHeader("User-Agent") String userAgent) {
+	public String post(@ModelAttribute User user, Model model, @RequestHeader("User-Agent") String userAgent) {
 		messageQueueSender.queueDelivery(user);
+		headerCalculationHelper.addHeader4Delivery(userAgent);
 		model.addAttribute("user", new User());
 		return "test";
 	}
