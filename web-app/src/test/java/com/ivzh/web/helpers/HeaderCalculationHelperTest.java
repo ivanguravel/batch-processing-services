@@ -1,5 +1,6 @@
 package com.ivzh.web.helpers;
 
+import com.ivzh.web.dtos.Header;
 import com.ivzh.web.queues.MessageQueueSender;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,24 +30,19 @@ public class HeaderCalculationHelperTest {
             headerCalculationHelper.addHeader4Delivery(CHROME_HEADER);
         }
 
-        Queue<Map<String, Long>> queue = deliveryQueueSenderStub.getQueue();
-        long endTestTime = System.currentTimeMillis() + 300000;
+        Queue<Header> queue = deliveryQueueSenderStub.getQueue();
+        long endWaitingTime = System.currentTimeMillis() + 300_000;
         long currentTime = System.currentTimeMillis();
 
-        while (queue.isEmpty() && currentTime <= endTestTime) {
+        while (queue.isEmpty() && currentTime <= endWaitingTime) {
             Thread.sleep(2_000);
             currentTime = System.currentTimeMillis();
         }
 
-        boolean result = false;
-        Map<String, Long> map = queue.poll();
-
-        if (map != null && map.getOrDefault(CHROME_HEADER, 0L) >= 3L) {
-            result = true;
-        }
+        Header header = queue.poll();
+        boolean result = header != null && CHROME_HEADER.equals(header.getName()) && header.getCount() >= 3L;
 
         Assert.assertTrue(result);
-
     }
 
     private void initStub() throws Exception {
@@ -56,14 +52,14 @@ public class HeaderCalculationHelperTest {
     }
 
     private static class MessageDeliveryQueueSenderStub extends MessageQueueSender {
-        private Queue<Map<String, Long>> queue = new LinkedList<>();
+        private Queue<Header> queue = new LinkedList<>();
 
         @Override
         public void queueDelivery(String queueName, Object o) {
-            queue.add((Map<String, Long>) o);
+            queue.add((Header) o);
         }
 
-        public Queue<Map<String, Long>> getQueue() {
+        public Queue<Header> getQueue() {
             return queue;
         }
     }

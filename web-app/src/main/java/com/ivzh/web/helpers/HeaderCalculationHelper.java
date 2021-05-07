@@ -1,5 +1,6 @@
 package com.ivzh.web.helpers;
 
+import com.ivzh.web.dtos.Header;
 import com.ivzh.web.queues.MessageQueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -99,7 +100,10 @@ public class HeaderCalculationHelper {
         public void run() {
             try {
                 headersCountCalculator.stopCalculating();
-                messageQueueSender.queueDelivery(queueName, new HashMap<>(calculatedResults));
+
+                for (Map.Entry<String, Long> e : calculatedResults.entrySet()) {
+                    messageQueueSender.queueDelivery(queueName, new Header(e.getKey(), e.getValue()));
+                }
                 calculatedResults.clear();
             } finally {
                 headersCountCalculator.continueCalculating();
