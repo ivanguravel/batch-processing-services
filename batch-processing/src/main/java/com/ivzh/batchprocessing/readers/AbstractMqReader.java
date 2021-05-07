@@ -18,5 +18,5 @@ public abstract class AbstractMqReader<T> implements ItemReader<T> {
         return deque.isEmpty() ? null : deque.poll();
     }
 
-    public abstract void processQueue(String message);
+    public abstract void processQueue(T message);
 }

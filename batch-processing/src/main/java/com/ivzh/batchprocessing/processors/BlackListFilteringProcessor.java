@@ -16,9 +16,9 @@ public class BlackListFilteringProcessor implements ItemProcessor<User, User> {
     }
 
     @Override
-    public User process(User user) throws Exception {
+    public User process(User user) {
         if (blackListUsers.contains(user)) {
-            throw new IllegalArgumentException(String.format("can't process %s user", user));
+            throw new IllegalArgumentException(String.format("can't process %s user because of blacklist", user));
         } else {
             return user;
         }

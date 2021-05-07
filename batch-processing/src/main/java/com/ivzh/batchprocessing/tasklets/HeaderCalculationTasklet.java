@@ -1,6 +1,6 @@
 package com.ivzh.batchprocessing.tasklets;
 
-import com.ivzh.batchprocessing.readers.RabbitmqHeadersReader;
+import com.ivzh.batchprocessing.readers.RabbitmqHeadersReaderMq;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.StepExecution;
@@ -14,7 +14,7 @@ public class HeaderCalculationTasklet implements Tasklet, StepExecutionListener 
 
 
     @Autowired
-    private RabbitmqHeadersReader reader;
+    private RabbitmqHeadersReaderMq reader;
 
 
     @Override

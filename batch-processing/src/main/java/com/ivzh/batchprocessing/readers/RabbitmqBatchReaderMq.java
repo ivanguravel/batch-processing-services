@@ -2,9 +2,9 @@ package com.ivzh.batchprocessing.readers;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 
-public class RabbitmqHeadersReader extends AbstractStringReader {
+public class RabbitmqBatchReaderMq extends AbstractMqStringReader {
 
-    @RabbitListener(queues = "headers")
+    @RabbitListener(queues = "test")
     public void processQueue(String message) {
         deque.add(message);
     }

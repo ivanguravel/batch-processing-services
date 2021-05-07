@@ -1,7 +1,9 @@
 package com.ivzh.batchprocessing.configs;
 
 
-import com.ivzh.batchprocessing.readers.RabbitmqBatchReader;
+import com.ivzh.batchprocessing.dtos.Header;
+import com.ivzh.batchprocessing.readers.RabbitmqBatchReaderMq;
+import com.ivzh.batchprocessing.readers.RabbitmqHeadersReaderMq;
 import com.ivzh.batchprocessing.utils.Consts;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -24,8 +26,11 @@ public class ReadDataConfig {
 
     @Bean(Consts.READER_NAME)
     public ItemReader<String> reader() {
-        return new RabbitmqBatchReader();
+        return new RabbitmqBatchReaderMq();
     }
+
+    @Bean(Consts.HEADERS_READER_NAME)
+    public ItemReader<Header> headerItemReader() { return new RabbitmqHeadersReaderMq(); }
 
     @Bean
     public RabbitTemplate template() {

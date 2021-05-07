@@ -13,8 +13,6 @@ public abstract class StrategiesSwitcher<T> {
         T strategy = strategyMap.get(strategyName);
         if (Objects.nonNull(strategy)) {
             return strategy;
-        } else if(!CollectionUtils.isEmpty(strategyMap)) {
-            return (T) strategyMap.values().toArray()[0];
         } else {
             throw new UnsupportedOperationException("Can't find any strategies");
         }

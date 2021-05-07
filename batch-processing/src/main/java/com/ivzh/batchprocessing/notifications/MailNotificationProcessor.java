@@ -1,7 +1,9 @@
 package com.ivzh.batchprocessing.notifications;
 
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
+@Component("mail")
 public class MailNotificationProcessor implements SimpleNotificationStrategy {
     @Async
     @Override

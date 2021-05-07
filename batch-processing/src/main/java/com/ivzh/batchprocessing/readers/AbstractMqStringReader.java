@@ -2,7 +2,7 @@ package com.ivzh.batchprocessing.readers;
 
 import java.util.Objects;
 
-public abstract class AbstractStringReader extends AbstractMqReader<String> {
+public abstract class AbstractMqStringReader extends AbstractMqReader<String> {
 
     private static final String EMPTY = "";
 
