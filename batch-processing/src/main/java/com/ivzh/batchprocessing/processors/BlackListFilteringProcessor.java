@@ -1,6 +1,6 @@
 package com.ivzh.batchprocessing.processors;
 
-import com.ivzh.batchprocessing.dtos.User;
+import com.ivzh.shared.dtos.User;
 import org.springframework.batch.item.ItemProcessor;
 
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package com.ivzh.batchprocessing.dtos;
+package com.ivzh.shared.dtos;
 
 public class Header {
 

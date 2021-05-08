@@ -1,15 +1,12 @@
 package com.ivzh.web.helpers;
 
-import com.ivzh.web.dtos.Header;
+import com.ivzh.shared.dtos.Header;
 import com.ivzh.web.queues.MessageQueueSender;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 public class HeaderCalculationHelperTest {

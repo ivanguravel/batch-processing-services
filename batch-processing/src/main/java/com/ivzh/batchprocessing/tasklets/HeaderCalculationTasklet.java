@@ -1,6 +1,6 @@
 package com.ivzh.batchprocessing.tasklets;
 
-import com.ivzh.batchprocessing.dtos.Header;
+import com.ivzh.shared.dtos.Header;
 import com.ivzh.batchprocessing.readers.RabbitmqHeadersReader;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepContribution;

@@ -1,7 +1,7 @@
 package com.ivzh.batchprocessing.configs;
 
 
-import com.ivzh.batchprocessing.dtos.Header;
+import com.ivzh.shared.dtos.Header;
 import com.ivzh.batchprocessing.readers.RabbitmqBatchReader;
 import com.ivzh.batchprocessing.readers.RabbitmqHeadersReader;
 import com.ivzh.batchprocessing.utils.Consts;

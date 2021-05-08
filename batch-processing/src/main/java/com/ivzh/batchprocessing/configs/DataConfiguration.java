@@ -1,7 +1,7 @@
 package com.ivzh.batchprocessing.configs;
 
 
-import com.ivzh.batchprocessing.dtos.User;
+import com.ivzh.shared.dtos.User;
 import com.ivzh.batchprocessing.utils.Consts;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.support.transaction.ResourcelessTransactionManager;

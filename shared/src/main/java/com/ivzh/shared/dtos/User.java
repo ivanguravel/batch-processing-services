@@ -1,18 +1,21 @@
-package com.ivzh.batchprocessing.dtos;
+package com.ivzh.shared.dtos;
 
 import java.util.Objects;
 import java.util.Random;
 
 public class User {
 
-	private final int id;
-	private final String lastName;
-	private final String firstName;
+	private int id;
+	private String lastName;
+	private String firstName;
 
 	public User(String firstName, String lastName) {
 		this.id = new Random().nextInt();
 		this.firstName = firstName;
 		this.lastName = lastName;
+	}
+
+	public User() {
 	}
 
 	public String getFirstName() {

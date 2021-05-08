@@ -1,13 +1,12 @@
 package com.ivzh.web.helpers;
 
-import com.ivzh.web.dtos.Header;
+import com.ivzh.shared.dtos.Header;
 import com.ivzh.web.queues.MessageQueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.*;

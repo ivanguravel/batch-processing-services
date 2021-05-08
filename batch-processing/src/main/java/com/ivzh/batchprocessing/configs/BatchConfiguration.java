@@ -1,7 +1,7 @@
 package com.ivzh.batchprocessing.configs;
 
 import com.ivzh.batchprocessing.JobCompletionNotificationListener;
-import com.ivzh.batchprocessing.dtos.User;
+import com.ivzh.shared.dtos.User;
 import com.ivzh.batchprocessing.processors.BlackListFilteringProcessor;
 import com.ivzh.batchprocessing.processors.PersonItemProcessor;
 import com.ivzh.batchprocessing.utils.Consts;
@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
@@ -34,6 +35,7 @@ import java.util.Arrays;
 @Configuration
 @EnableBatchProcessing
 @EnableScheduling
+@EnableAsync
 public class BatchConfiguration {
 
     private static final String JOB_NAME = "job";

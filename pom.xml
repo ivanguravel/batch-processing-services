@@ -11,6 +11,7 @@
 	
 	
 	<modules>
+        <module>shared</module>
 		<module>batch-processing</module>
 		<module>rest</module>
 		<module>web-app</module>
@@ -30,6 +31,11 @@
             <type>pom</type>
             <scope>import</scope>
         </dependency>
+         <dependency>
+             <groupId>com.ivzh.example</groupId>
+             <artifactId>shared</artifactId>
+             <version>0.0.1-SNAPSHOT</version>
+         </dependency>
     </dependencies>
 </dependencyManagement>
 	

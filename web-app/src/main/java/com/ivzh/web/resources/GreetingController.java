@@ -1,10 +1,9 @@
 package com.ivzh.web.resources;
 
-import com.ivzh.web.dtos.User;
+import com.ivzh.shared.dtos.User;
 import com.ivzh.web.helpers.HeaderCalculationHelper;
 import com.ivzh.web.queues.MessageQueueSender;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
