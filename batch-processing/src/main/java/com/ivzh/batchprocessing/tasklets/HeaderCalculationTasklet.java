@@ -51,8 +51,7 @@ public class HeaderCalculationTasklet implements Tasklet, StepExecutionListener 
 
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
-
-
+        cache.clear();
         return ExitStatus.COMPLETED;
     }
 }
