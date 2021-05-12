@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.*;
@@ -99,8 +100,9 @@ public class HeaderCalculationHelper {
         public void run() {
             try {
                 headersCountCalculator.stopCalculating();
-
-                for (Map.Entry<String, Long> e : calculatedResults.entrySet()) {
+                // for avoiding concurrent modification exception
+                Map<String, Long> calculatedResultsCopy = new HashMap<>(calculatedResults);
+                for (Map.Entry<String, Long> e : calculatedResultsCopy.entrySet()) {
                     messageQueueSender.queueDelivery(queueName, new Header(e.getKey(), e.getValue()));
                 }
                 calculatedResults.clear();
