@@ -100,9 +100,7 @@ public class HeaderCalculationHelper {
         public void run() {
             try {
                 headersCountCalculator.stopCalculating();
-                // for avoiding concurrent modification exception
-                Map<String, Long> calculatedResultsCopy = new HashMap<>(calculatedResults);
-                for (Map.Entry<String, Long> e : calculatedResultsCopy.entrySet()) {
+                for (Map.Entry<String, Long> e : calculatedResults.entrySet()) {
                     messageQueueSender.queueDelivery(queueName, new Header(e.getKey(), e.getValue()));
                 }
                 calculatedResults.clear();
