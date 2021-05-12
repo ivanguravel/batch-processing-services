@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 
-public class HeaderCalculationTasklet implements Tasklet, StepExecutionListener {
+public class CsvReportTasklet implements Tasklet, StepExecutionListener {
 
     private List<Header> cache = new LinkedList<>();
 
@@ -41,15 +41,7 @@ public class HeaderCalculationTasklet implements Tasklet, StepExecutionListener 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 
-        List<Header> collect = cache.parallelStream()
-                .collect(groupingBy(Header::getName))
-                .entrySet()
-                .parallelStream()
-                .map(entry -> new Header(entry.getKey(),
-                        entry.getValue().stream().map(Header::getCount).reduce(Long::sum).orElse(0L)))
-                .collect(Collectors.toList());
 
-        headerDao.saveBatch(collect);
         return RepeatStatus.FINISHED;
     }
 
