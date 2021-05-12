@@ -104,10 +104,20 @@ public class HeaderCalculationHelper {
                 for (Map.Entry<String, Long> e : calculatedResultsCopy.entrySet()) {
                     messageQueueSender.queueDelivery(queueName, new Header(e.getKey(), e.getValue()));
                 }
-
+                calculatedResults = copyCalculatedResultsForNewWorkAttempt(calculatedResultsCopy);
             } finally {
                 headersCountCalculator.continueCalculating();
             }
+        }
+
+        private Map<String, Long> copyCalculatedResultsForNewWorkAttempt(Map<String, Long> calculatedResultsCopy) {
+            Map<String, Long> result = new ConcurrentHashMap<>();
+            for (Map.Entry<String, Long> entry : calculatedResults.entrySet()) {
+                if (!calculatedResultsCopy.keySet().contains(entry.getKey())) {
+                    result.put(entry.getKey(), entry.getValue());
+                }
+            }
+            return result;
         }
     }
 }
