@@ -1,8 +1,27 @@
 defaultSize: 5
+
+graphql:
+  enableTracing: false
+  queryCache: maximumSize=10000
+  schemaFiles:
+    - dropwizard.graphql
+
+# HTTP-specific options.
 server:
-  applicationConnectors:
-    - type: http
-      port: 8082
+  type: simple
+  rootPath: /api/
+  applicationContextPath: /
+  adminContextPath: /admin
+  connector:
+    type: http
+    port: 8082
+
+  requestLog:
+    appenders:
+      - type: console
+        timeZone: UTC
+        target: stdout
+
 database:
   driverClass: com.mysql.jdbc.Driver
   url: jdbc:mysql://127.0.0.1:3306/TESTS

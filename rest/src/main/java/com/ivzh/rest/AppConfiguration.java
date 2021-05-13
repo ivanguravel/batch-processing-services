@@ -2,6 +2,7 @@ package com.ivzh.rest;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.smoketurner.dropwizard.graphql.GraphQLFactory;
 import io.dropwizard.db.DataSourceFactory;
 
 import javax.validation.Valid;
@@ -13,6 +14,9 @@ public class AppConfiguration extends io.dropwizard.Configuration {
 	@Valid
 	@NotNull
 	private DataSourceFactory database = new DataSourceFactory();
+	@Valid
+	@NotNull
+	public final GraphQLFactory graphql = new GraphQLFactory();
 
 	@JsonCreator
 	public AppConfiguration(@JsonProperty("defaultSize") int defaultSize) {
@@ -36,5 +40,10 @@ public class AppConfiguration extends io.dropwizard.Configuration {
 	@JsonProperty("database")
 	public DataSourceFactory getDataSourceFactory() {
 		return database;
+	}
+
+	@JsonProperty("graphql")
+	public GraphQLFactory getGraphQLFactory() {
+		return graphql;
 	}
 }

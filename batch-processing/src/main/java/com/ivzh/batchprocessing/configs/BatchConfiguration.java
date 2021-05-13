@@ -38,7 +38,7 @@ import java.util.Arrays;
 @EnableAsync
 public class BatchConfiguration {
 
-    private static final String JOB_NAME = "job";
+    private static final String JOB_NAME = "job1";
     private static final String STEP_NAME = "step1";
 
 
@@ -60,6 +60,7 @@ public class BatchConfiguration {
     @Autowired
     private JobCompletionNotificationListener listener;
     @Autowired
+    @Qualifier(STEP_NAME)
     private Step step1;
 
 
@@ -108,7 +109,7 @@ public class BatchConfiguration {
                 .build();
     }
 
-    @Bean
+    @Bean(STEP_NAME)
     public Step step1(JdbcBatchItemWriter<User> writer, StepBuilderFactory stepBuilderFactory, ResourcelessTransactionManager transactionManager) {
         return stepBuilderFactory.get(STEP_NAME)
                  .transactionManager(transactionManager)
