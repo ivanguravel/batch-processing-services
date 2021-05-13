@@ -30,10 +30,10 @@ public class CsvReportTasklet implements Tasklet, StepExecutionListener {
 
     @Value("${app.csv.export.dir}")
     private String filePath;
-//    @Value("#{jobParameters['pageSize']}")
-//    private Integer pageSize;
-//    @Value("#{jobParameters['offset']}")
-//    private Integer offset;
+    @Value("#{jobParameters['pageSize']}")
+    private Integer pageSize;
+    @Value("#{jobParameters['offset']}")
+    private Integer offset;
 
     @Autowired
     private UserDao userDao;
@@ -50,7 +50,7 @@ public class CsvReportTasklet implements Tasklet, StepExecutionListener {
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        PageImpl<User> usersPage = userDao.findAll(PageRequest.of(0, 5));
+        PageImpl<User> usersPage = userDao.findAll(PageRequest.of(,pageSize, offset));
         List<User> users = usersPage.get().collect(Collectors.toList());
 
         try (FileOutputStream out = new FileOutputStream(filePath + "report.csv");
