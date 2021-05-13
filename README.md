@@ -16,4 +16,4 @@ Consists of 3 parts:
 
 ## Deployment diagram
 
-- ![diagram](pictures/deployment.png "diagram")
+- ![diagram](images/deployment.png "diagram")
