@@ -5,7 +5,6 @@ import com.ivzh.rest.dtos.User;
 import com.ivzh.rest.dtos.UserDataFetcher;
 import com.ivzh.rest.healthchecks.ApplicationHealthCheck;
 import com.ivzh.rest.healthchecks.DatabaseHealthCheck;
-import com.ivzh.rest.resources.UserResource;
 import com.smoketurner.dropwizard.graphql.GraphQLBundle;
 import com.smoketurner.dropwizard.graphql.GraphQLFactory;
 import graphql.schema.idl.RuntimeWiring;
@@ -41,7 +40,6 @@ public class App extends Application<AppConfiguration> {
         userDataFetcher.setDao(dao);
 
         int defaultSize = basicConfiguration.getDefaultSize();
-        UserResource userResource = new UserResource(defaultSize, dao);
 
 
         // Enable CORS to allow GraphiQL on a separate port to reach the API
@@ -49,8 +47,6 @@ public class App extends Application<AppConfiguration> {
                 environment.servlets().addFilter("cors", CrossOriginFilter.class);
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
-
-        environment.jersey().register(userResource);
 
         ApplicationHealthCheck healthCheck = new ApplicationHealthCheck();
         DatabaseHealthCheck databaseHealthCheck = new DatabaseHealthCheck(jdbi, basicConfiguration.getDataSourceFactory().getValidationQuery());
