@@ -38,7 +38,7 @@ public class App extends Application<AppConfiguration> {
         DBIFactory factory = new DBIFactory();
         DBI jdbi = factory.build(environment, basicConfiguration.getDataSourceFactory(), "mysqlConfig");
         UserDAO dao = jdbi.onDemand(UserDAO.class);
-        userDataFetcher = new UserDataFetcher(dao);
+        userDataFetcher.setDao(dao);
 
         int defaultSize = basicConfiguration.getDefaultSize();
         UserResource userResource = new UserResource(defaultSize, dao);
@@ -88,10 +88,11 @@ public class App extends Application<AppConfiguration> {
 
 
     private RuntimeWiring buildWiring(AppConfiguration configuration) {
+        userDataFetcher = new UserDataFetcher();
 
         RuntimeWiring wiring =
                 RuntimeWiring.newRuntimeWiring()
-                        .type("Query", typeWiring -> typeWiring.dataFetcher("user", new UserDataFetcher(null)))
+                        .type("Query", typeWiring -> typeWiring.dataFetcher("user", userDataFetcher))
                         .build();
 
         return wiring;
