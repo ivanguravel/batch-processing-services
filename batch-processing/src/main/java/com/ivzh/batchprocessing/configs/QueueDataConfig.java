@@ -16,7 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource("classpath:application.properties")
-public class ReadDataConfig {
+public class QueueDataConfig {
 
     @Value("${queue.name}")
     private String queueName;

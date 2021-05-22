@@ -36,7 +36,6 @@ public class TaskletConfig {
     public Job csvJob() {
         return jobs
                 .get("taskletsJob")
-
                 .start(csvProcessor())
                 .build();
     }

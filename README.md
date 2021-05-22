@@ -8,7 +8,7 @@ simple app which is could be used as a application-companion for your website. p
 
 Consists of 3 parts:
 - webapp (could be your website)
-- batch processor (spring batch engine)
+- batch processor (batch engine)
 - data visualization app
 - rabbit mq as a message queue
 - mysql as a relational database
@@ -17,3 +17,10 @@ Consists of 3 parts:
 ## Deployment diagram
 
 - ![diagram](images/deployment.png "diagram")
+
+
+## Deployment diagram
+- java 8
+- spring framework (mvc, batch)
+- dropwizard 
+- graphql
