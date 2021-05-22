@@ -7,6 +7,7 @@ import com.ivzh.batchprocessing.readers.RabbitmqHeadersReader;
 import com.ivzh.batchprocessing.utils.Consts;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,5 +39,10 @@ public class QueueDataConfig {
 
         template.setDefaultReceiveQueue(queueName);
         return template;
+    }
+
+    @Bean
+    public Jackson2JsonMessageConverter converter() {
+        return new Jackson2JsonMessageConverter();
     }
 }
