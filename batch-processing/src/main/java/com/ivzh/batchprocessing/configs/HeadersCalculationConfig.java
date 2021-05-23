@@ -58,7 +58,7 @@ public class HeadersCalculationConfig {
     public Step step5(StepBuilderFactory stepBuilderFactory, ResourcelessTransactionManager transactionManager) {
         return stepBuilderFactory.get(STEP5_NAME)
                 .transactionManager(transactionManager)
-                .<Header, List<Header>>chunk(2)
+                .<Header, Header>chunk(2)
                 .reader(itemReader)
                 .processor(headersCalculatingProcessor())
                 .writer(headersWriter())

@@ -7,15 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class HeadersWriter implements ItemWriter<List<Header>> {
+public class HeadersWriter implements ItemWriter<Header> {
 
     @Autowired
     private HeaderDao dao;
 
     @Override
-    public void write(List<? extends List<Header>> items) throws Exception {
-        for (List<Header> item : items) {
-            dao.add(item);
+    public void write(List<? extends Header> items) throws Exception {
+        for (Header header : items) {
+            dao.add(header);
         }
     }
 }

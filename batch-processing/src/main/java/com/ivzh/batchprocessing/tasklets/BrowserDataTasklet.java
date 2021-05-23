@@ -1,6 +1,7 @@
 package com.ivzh.batchprocessing.tasklets;
 
 import com.ivzh.batchprocessing.daos.HeaderDao;
+import com.ivzh.batchprocessing.notifications.DefaultNotificationGateway;
 import com.ivzh.batchprocessing.utils.UserAgentInfo;
 import com.ivzh.shared.dtos.Header;
 import org.springframework.batch.core.StepContribution;
@@ -19,6 +20,8 @@ public class BrowserDataTasklet implements Tasklet {
 
     @Autowired
     private HeaderDao dao;
+    @Autowired
+    private DefaultNotificationGateway gateway;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
@@ -28,7 +31,6 @@ public class BrowserDataTasklet implements Tasklet {
             collectedBrowsers.add(new UserAgentInfo(header.getName()).getBrowser());
         }
 
-
         List<Tuple> tuples = collectedBrowsers
                 .stream()
                 .map(browser -> new Tuple(browser, 1)).collect(groupingBy(Tuple::getFirst))
@@ -36,13 +38,17 @@ public class BrowserDataTasklet implements Tasklet {
                 .stream()
                 .map(e ->
                         new Tuple(e.getKey(),
-                                e.getValue().stream().map(entry -> entry.second).reduce((one, two) -> one + two).get()))
+                                e.getValue().stream().map(entry -> entry.second).reduce((one, two) -> one + two).orElse(0)))
                 .collect(Collectors.toList());
 
-        // TODO: will send it to some db
+        StringBuilder message = new StringBuilder();
+
         for (Tuple tuple : tuples) {
-            System.out.println(String.format("%s %d", tuple.first, tuple.second));
+            message.append(String.format("%s %d \n", tuple.first, tuple.second));
         }
+
+        gateway.getDefaultSimpleNotificationGateway()
+                .send("admin@test.com", "browserdatatasklet@test.com", "browser usage", message.toString());
 
         return RepeatStatus.FINISHED;
     }
