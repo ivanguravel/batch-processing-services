@@ -5,6 +5,7 @@ simple app which is could be used as a application-companion for your website. p
 - smart calculation of headers. i provided an example for calculating "User-Agent" headers. 
 - user processing in batching mode.
 - preparing db-2-csv reports.
+- browser usage report which is could be delivered to admin email
 
 Consists of 3 parts:
 - webapp (could be your website)
