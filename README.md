@@ -19,7 +19,7 @@ Consists of 3 parts:
 - ![diagram](images/deployment.png "diagram")
 
 
-## Deployment diagram
+## tech stack
 - java 8
 - spring framework (mvc, batch)
 - dropwizard 
